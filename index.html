@@ -14,17 +14,48 @@
             margin: 0px;
             padding: 0px;
             font-family: sans-serif;
+            overflow: hidden;
         }
         
-        #cities div {
-            width: 30%;
-            margin: .5%;
-            background: #efefef;
-            display: inline-block;
-            height: 100%;
-            text-align: center;
+        #cities {
+            width: 100%;
+            content: "";
+            display: table;
+            clear: both;
         }
-
+        
+        #cities .city {
+            float: left;
+            width: 33.33%;
+            height:100vh;
+            text-align: center;
+            padding: 50px 0px;
+            color: white;
+        }
+        
+        #cities .city .title {
+            font-size: 26px;
+            margin-top: 40%;
+        }
+        
+        #city_la {
+            background-color: #552583;            
+        }
+        #city_nola {
+            background-color: #D3BC8D;
+        }
+        #city_nyc {
+            background-color: #6CACE4;
+        }
+        .circle {
+            display: block;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: rgba(0,0,0,.25);
+            border-radius: 100%;
+        }
+        
     </style>
 
   </head>
@@ -32,9 +63,18 @@
   <body>
     
     <div id="cities">
-        <div>LA</div>
-        <div>NOLA</div>
-        <div>NYC</div>
+        <div id="city_la" class="city">
+            <div class="title">LA</div>
+            <div class="circle"></div>
+        </div>
+        <div id="city_nola" class="city">
+            <div class="title">NOLA</div>
+            <div class="circle"></div>
+        </div>
+        <div id="city_nyc" class="city">
+            <div class="title">NYC</div>
+            <div class="circle"></div>
+        </div>
     </div>
     
   </body>
