@@ -1,6 +1,10 @@
 //create a synth and connect it to the master output (your speakers)
 var synth = new Tone.Synth().toMaster();
 
+$.getJSON( "/sample_data.json", function( data ) {
+	console.log(data.list[0].main.temp);
+});
+
 $('#LA_1').on("click", function() {
   console.log("LA Sound 1 Clicked");
   synth.triggerAttackRelease("C4", "8n");
