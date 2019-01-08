@@ -7,9 +7,9 @@
     <meta name="description" content="Maria">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
-    
+
     <style>
-        
+
         body {
             margin: 0px;
             padding: 0px;
@@ -17,14 +17,18 @@
             overflow: hidden;
             height: 100%;
         }
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> 165fc4bb398e647ad37f5f9497624ec91d4ee820
         #cities {
             width: 100%;
             content: "";
             display: table;
             clear: both;
         }
-        
+
         #cities .city {
             float: left;
             width: 33.33%;
@@ -33,14 +37,14 @@
             padding: 50px 0px;
             color: white;
         }
-        
+
         #cities .city .title {
             font-size: 26px;
             margin-top: 40%;
         }
-        
+
         #city_la {
-            background-color: #552583;            
+            background-color: #552583;
         }
         #city_nola {
             background-color: #D3BC8D;
@@ -56,33 +60,48 @@
             background-color: rgba(0,0,0,.25);
             border-radius: 100%;
         }
-        
+
     </style>
 
   </head>
 
   <body>
-    
+
     <div id="cities">
-        <div id="city_la" class="city">
-            <div class="center">
-                <div class="title">LA</div>
-                <div class="circle"></div>
-            </div>
+        <div class="city city--la" id="city_la">
+          <h2 class="city__title title">LA</h2>
+          <div class="city__circle circle"></div>
+          <div class="city__buttons">
+            <button id="LA_1">Sound 1</button>
+            <button id="LA_2">Sound 2</button>
+            <button id="LA_3">Sound 3</button>
+            <button id="LA_4">Sound 4</button>
+          </div>
         </div>
-        <div id="city_nola" class="city">
-            <div class="center">
-                <div class="title">NOLA</div>
-                <div class="circle"></div>
-            </div>
+        <div class="city city--nola" id="city_nola">
+          <h2 class="city__title title">NOLA</h2>
+          <div class="city__circle circle"></div>
+          <div class="city__buttons">
+            <button id="NOLA_1">Sound 1</button>
+            <button id="NOLA_2">Sound 2</button>
+            <button id="NOLA_3">Sound 3</button>
+            <button id="NOLA_4">Sound 4</button>
+          </div>
         </div>
-        <div id="city_nyc" class="city">
-            <div class="center">
-                <div class="title">NYC</div>
-                <div class="circle"></div>
-            </div>
+        <div class="city city--nyc" id="city_nyc">
+          <h2 class="city__title title">NYC</h2>
+          <div class="city__circle circle"></div>
+          <div class="city__buttons">
+            <button id="NYC_1">Sound 1</button>
+            <button id="NYC_2">Sound 2</button>
+            <button id="NYC_3">Sound 3</button>
+            <button id="NYC_4">Sound 4</button>
+          </div>
         </div>
     </div>
-    
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/Tone.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>
