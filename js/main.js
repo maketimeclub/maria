@@ -117,7 +117,7 @@ var bass = new Tone.MonoSynth({
 }).toMaster();
 
 
-$.getJSON( "js/index.json", function( data ) {
+$.getJSON( "js/sample_data.json", function( data ) {
 
 	var str = "";
 	var notes = [];
