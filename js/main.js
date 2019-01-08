@@ -123,7 +123,7 @@ $.getJSON( "data/today.json", function( data ) {
 	var notes = [];
 	$.each( data, function( key, val ) {
 		if(key < 8) {
-			var index = Math.round((val.temp % 30) / 3);
+			var index = Math.round((val.temp % 21) / 3);
 			str += key_c[index] + ",";
 			notes.push(key_c[index]);
 		}
