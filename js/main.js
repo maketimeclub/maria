@@ -101,7 +101,7 @@ $('#NYC_4').on("click", function() {
  BASS
  */
 var bass = new Tone.MonoSynth({
-  "volume" : -10,
+  "volume" : -20,
   "envelope" : {
     "attack" : 0.1,
     "decay" : 0.3,
@@ -117,13 +117,13 @@ var bass = new Tone.MonoSynth({
 }).toMaster();
 
 
-$.getJSON( "js/sample_data.json", function( data ) {
+$.getJSON( "data/today.json", function( data ) {
 
 	var str = "";
 	var notes = [];
-	$.each( data.list, function( key, val ) {
+	$.each( data, function( key, val ) {
 		if(key < 8) {
-			var index = Math.round((val.main.temp % 270) / 3);
+			var index = Math.round((val.temp % 30) / 3);
 			str += key_c[index] + ",";
 			notes.push(key_c[index]);
 		}
