@@ -2,7 +2,11 @@
 var synth = new Tone.Synth().toMaster();
 
 $.getJSON( "/sample_data.json", function( data ) {
-	console.log(data.list[0].main.temp);
+
+	$.each( data.list, function( key, val ) {
+	    console.log(val.main.temp);
+	});
+
 });
 
 $('#LA_1').on("click", function() {
