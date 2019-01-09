@@ -117,31 +117,52 @@ var bass = new Tone.MonoSynth({
 }).toMaster();
 
 
-$.getJSON( "data/today.json", function( data ) {
+var LA_notes = [];
+var NOLA_notes = [];
+var NYC_notes = [];
 
-	var str = "";
-	var notes = [];
-	$.each( data, function( key, val ) {
+$.getJSON( "data/today.json", function( data ) {
+  var str = "";
+
+	$.each( data[0].forecast, function( key, val ) {
 		if(key < 8) {
 			var index = Math.round((val.temp % 21) / 3);
 			str += key_c[index] + ",";
-			notes.push(key_c[index]);
+			LA_notes.push(key_c[index]);
 		}
 	});
+	//console.log(LA_notes);
 	
-	console.log(notes);
-	
-	var bassPart = new Tone.Sequence(function(time, note){
-	  bass.triggerAttackRelease(note, "16n", time);
-	}, notes).start(0);
-	// bassPart.probability = 0.9;
+  $.each( data[1].forecast, function( key, val ) {
+    if(key < 8) {
+      var index = Math.round((val.temp % 21) / 3);
+      str += key_c[index] + ",";
+      NOLA_notes.push(key_c[index]);
+    }
+  });
+  //console.log(NOLA_notes);
+
+  $.each( data[2].forecast, function( key, val ) {
+    if(key < 8) {
+      var index = Math.round((val.temp % 21) / 3);
+      str += key_c[index] + ",";
+      NYC_notes.push(key_c[index]);
+    }
+  });
+  //console.log(NYC_notes);
 	
 });
 
 var playing = false;
-$('#NOLA_play').on("click", function() {
+
+$('#LA_play').on("click", function() {
 	
-  Tone.Transport.bpm.value = 90;
+  var bassPart = new Tone.Sequence(function(time, note){
+    bass.triggerAttackRelease(note, "16n", time);
+  }, LA_notes).start(0);
+  // bassPart.probability = 0.9;
+
+  Tone.Transport.bpm.value = 100;
   if (playing) {
     Tone.Transport.stop();
     playing = false;
@@ -153,6 +174,42 @@ $('#NOLA_play').on("click", function() {
 
 });
 
+$('#NOLA_play').on("click", function() {
+  
+  var bassPart = new Tone.Sequence(function(time, note){
+    bass.triggerAttackRelease(note, "16n", time);
+  }, NOLA_notes).start(0);
+  // bassPart.probability = 0.9;
 
+  Tone.Transport.bpm.value = 85;
+  if (playing) {
+    Tone.Transport.stop();
+    playing = false;
+  } else {
+    Tone.Transport.start("+0.1");
+    synth.triggerAttackRelease();
+    playing = true;
+  }
+
+});
+
+$('#NYC_play').on("click", function() {
+
+  var bassPart = new Tone.Sequence(function(time, note){
+    bass.triggerAttackRelease(note, "16n", time);
+  }, NYC_notes).start(0);
+  // bassPart.probability = 0.9;
+
+  Tone.Transport.bpm.value = 120;
+  if (playing) {
+    Tone.Transport.stop();
+    playing = false;
+  } else {
+    Tone.Transport.start("+0.1");
+    synth.triggerAttackRelease();
+    playing = true;
+  }
+
+});
 
 
