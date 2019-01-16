@@ -113,67 +113,31 @@ $.getJSON( "data/today.json", function( data ) {
 
 });
 
-var playing = false;
+var playSong = function(city_button, city_notes, city_bpm, city_playing) {
 
-$('#LA_play').on("click", function() {
+  $(city_button).on("click", function() {
+    var bassPart = new Tone.Sequence(function(time, note){
+      bass.triggerAttackRelease(note, "16n", time);
+    }, city_notes).start(0);
 
-  var bassPart = new Tone.Sequence(function(time, note){
-    bass.triggerAttackRelease(note, "16n", time);
-  }, LA_notes).start(0);
-  // bassPart.probability = 0.9;
+    Tone.Transport.bpm.value = city_bpm;
+    if (city_playing) {
+      Tone.Transport.stop();
+      $(this).text("Play");
+      city_playing = false;
+    } else {
+      Tone.Transport.start("+0.1");
+      synth.triggerAttackRelease();
+      city_playing = true;
+      $(this).text("Stop");
+    }
+  });
+};
 
-  Tone.Transport.bpm.value = 100;
-  if (playing) {
-    Tone.Transport.stop();
-    $(this).text("Play");
-    playing = false;
-  } else {
-    Tone.Transport.start("+0.1");
-    synth.triggerAttackRelease();
-    playing = true;
-    $(this).text("Stop");
-  }
+var LA_playing = false;
+var NOLA_playing = false;
+var NYC_playing = false;
 
-});
-
-$('#NOLA_play').on("click", function() {
-
-  var bassPart = new Tone.Sequence(function(time, note){
-    bass.triggerAttackRelease(note, "16n", time);
-  }, NOLA_notes).start(0);
-  // bassPart.probability = 0.9;
-
-  Tone.Transport.bpm.value = 85;
-  if (playing) {
-    Tone.Transport.stop();
-    playing = false;
-    $(this).text("Play");
-  } else {
-    Tone.Transport.start("+0.1");
-    synth.triggerAttackRelease();
-    playing = true;
-    $(this).text("Stop");
-  }
-
-});
-
-$('#NYC_play').on("click", function() {
-
-  var bassPart = new Tone.Sequence(function(time, note){
-    bass.triggerAttackRelease(note, "16n", time);
-  }, NYC_notes).start(0);
-  // bassPart.probability = 0.9;
-
-  Tone.Transport.bpm.value = 120;
-  if (playing) {
-    Tone.Transport.stop();
-    playing = false;
-    $(this).text("Play");
-  } else {
-    Tone.Transport.start("+0.1");
-    synth.triggerAttackRelease();
-    playing = true;
-    $(this).text("Stop");
-  }
-
-});
+playSong('#LA_play', LA_notes, 100, LA_playing);
+playSong('#NOLA_play', NOLA_notes, 85, NOLA_playing);
+playSong('#NYC_play', NYC_notes, 120, NYC_playing);
