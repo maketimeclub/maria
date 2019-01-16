@@ -32,7 +32,8 @@ var piano = new Tone.PolySynth(4, Tone.Synth, {
   "portamento" : .05
 }).toMaster();
 
-var key_c = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
+var key_c_old = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5"];
+var key_c = ["C", "D", "E", "F", "G", "A", "B", "C", "D", "E"];
 
 // /*
 //  KICK
@@ -112,33 +113,31 @@ var LA_notes = [];
 var NOLA_notes = [];
 var NYC_notes = [];
 
+var generateNotes = function(key, val, data_city_notes) {
+  if(key < 8) {
+    var temp_whole = Math.round(val.temp);
+    var temp_array = temp_whole.toString().split('');
+    var note = temp_array.pop(); // this gets 'C' or 'D' or whatever
+    var number = temp_array.pop(); // this gets '4' or '5' or whatever
+    var index = key_c[note] + number;
+    data_city_notes.push(index);
+  }
+}
+
 $.getJSON( "data/today.json", function( data ) {
   var str = "";
 
 	$.each( data[0].forecast, function( key, val ) {
-		if(key < 8) {
-			var index = Math.round((val.temp % 21) / 3);
-			str += key_c[index] + ",";
-			LA_notes.push(key_c[index]);
-		}
+    generateNotes(key, val, LA_notes);
 	});
-	//console.log(LA_notes);
 
   $.each( data[1].forecast, function( key, val ) {
-    if(key < 8) {
-      var index = Math.round((val.temp % 21) / 3);
-      str += key_c[index] + ",";
-      NOLA_notes.push(key_c[index]);
-    }
+    generateNotes(key, val, NOLA_notes);
   });
   //console.log(NOLA_notes);
 
   $.each( data[2].forecast, function( key, val ) {
-    if(key < 8) {
-      var index = Math.round((val.temp % 21) / 3);
-      str += key_c[index] + ",";
-      NYC_notes.push(key_c[index]);
-    }
+    generateNotes(key, val, NYC_notes);
   });
   //console.log(NYC_notes);
 
@@ -168,7 +167,7 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "16n", time);
     }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
-  
+
     pianoPart.loop = true;
     pianoPart.loopEnd = "1m";
     pianoPart.humanize = true;
