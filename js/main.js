@@ -54,8 +54,11 @@ var bass = new Tone.MonoSynth({
 
 
 var LA_notes = [];
+var LA_words = [];
 var NOLA_notes = [];
+var NOLA_words = [];
 var NYC_notes = [];
+var NYC_words = [];
 
 
 var temp_min = 0;
@@ -65,7 +68,7 @@ var octave_max = 7;
 var note_min = 0;
 var note_max = 100;
 
-var generateNotes = function(key, val, data_city_notes) {
+var generateNotes = function(key, val, data_city_notes, data_city_words) {
   if(key < 8) {
     var temp_norm = (val.temp - temp_min) / (temp_max - temp_min);
 
@@ -77,6 +80,9 @@ var generateNotes = function(key, val, data_city_notes) {
 
     var note = keys['C'][index] + octave;
     data_city_notes.push(note);
+
+    data_city_notes.push(index);
+    data_city_words.push(val.description);
   }
 }
 
@@ -84,17 +90,17 @@ $.getJSON( "data/today.json", function( data ) {
   var str = "";
 
 	$.each( data[0].forecast, function( key, val ) {
-    generateNotes(key, val, LA_notes);
+    generateNotes(key, val, LA_notes, LA_words);
 	});
   console.log(LA_notes);
 
   $.each( data[1].forecast, function( key, val ) {
-    generateNotes(key, val, NOLA_notes);
+    generateNotes(key, val, NOLA_notes, NOLA_words);
   });
   console.log(NOLA_notes);
 
   $.each( data[2].forecast, function( key, val ) {
-    generateNotes(key, val, NYC_notes);
+    generateNotes(key, val, NYC_notes, NYC_words);
   });
   console.log(NYC_notes);
 
@@ -103,7 +109,7 @@ $.getJSON( "data/today.json", function( data ) {
 var pianoPart;
 var kickPart;
 
-var playSong = function(city_button, city_notes, city_bpm, city_playing) {
+var playSong = function(city_button, city_notes, city_bpm, city_playing, city_words, city_voice) {
 
   $(city_button).on("click", function() {
     var element = $(this);
@@ -162,6 +168,9 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     } else {
       Tone.Transport.start("+0.1");
       synth.triggerAttackRelease();
+      setTimeout(function(){
+        responsiveVoice.speak(city_words[1], city_voice);
+      }, 1600);
       city_playing = true;
       $(this).text("Stop");
     }
@@ -172,6 +181,6 @@ var LA_playing = false;
 var NOLA_playing = false;
 var NYC_playing = false;
 
-playSong('#LA_play', LA_notes, 100, LA_playing);
-playSong('#NOLA_play', NOLA_notes, 85, NOLA_playing);
-playSong('#NYC_play', NYC_notes, 120, NYC_playing);
+playSong('#LA_play', LA_notes, 100, LA_playing, LA_words,"UK English Male");
+playSong('#NOLA_play', NOLA_notes, 85, NOLA_playing, NOLA_words,"UK English Female");
+playSong('#NYC_play', NYC_notes, 120, NYC_playing, NYC_words,"US English Male");
