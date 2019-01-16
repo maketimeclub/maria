@@ -3,46 +3,6 @@ var synth = new Tone.Synth().toMaster();
 
 var key_c = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C4"];
 
-$('#LA_1').on("click", function() {
-  console.log("LA Sound 1 Clicked");
-  synth.triggerAttackRelease("C4", "8n");
-});
-
-$('#LA_2').on("click", function() {
-  console.log("LA Sound 2 Clicked");
-  synth.triggerAttackRelease("G4", "8n");
-});
-
-$('#LA_3').on("click", function() {
-  console.log("LA Sound 3 Clicked");
-  synth.triggerAttackRelease("E4", "8n");
-});
-
-$('#LA_4').on("click", function() {
-  console.log("LA Sound 4 Clicked");
-  synth.triggerAttackRelease("F4", "8n");
-});
-
-$('#NYC_1').on("click", function() {
-  console.log("NYC Sound 1 Clicked");
-  synth.triggerAttackRelease("C4", "8n");
-});
-
-$('#NYC_2').on("click", function() {
-  console.log("NYC Sound 2 Clicked");
-  synth.triggerAttackRelease("G4", "8n");
-});
-
-$('#NYC_3').on("click", function() {
-  console.log("NYC Sound 3 Clicked");
-  synth.triggerAttackRelease("E4", "8n");
-});
-
-$('#NYC_4').on("click", function() {
-  console.log("NYC Sound 4 Clicked");
-  synth.triggerAttackRelease("F4", "8n");
-});
-
 // /*
 //  KICK
 //  */
