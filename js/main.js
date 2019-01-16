@@ -32,8 +32,9 @@ var piano = new Tone.PolySynth(4, Tone.Synth, {
   "portamento" : .05
 }).toMaster();
 
-var key_c_old = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5"];
-var key_c = ["C", "D", "E", "F", "G", "A", "B", "C", "D", "E"];
+var keys = {
+  'C': ["C", "D", "E", "F", "G", "A", "B", "C"]
+}
 
 // /*
 //  KICK
@@ -113,14 +114,26 @@ var LA_notes = [];
 var NOLA_notes = [];
 var NYC_notes = [];
 
+
+var temp_min = 0;
+var temp_max = 100;
+var octave_min = 2;
+var octave_max = 7;
+var note_min = 0;
+var note_max = 100;
+
 var generateNotes = function(key, val, data_city_notes) {
   if(key < 8) {
-    var temp_whole = Math.round(val.temp);
-    var temp_array = temp_whole.toString().split('');
-    var note = temp_array.pop(); // this gets 'C' or 'D' or whatever
-    var number = temp_array.pop(); // this gets '4' or '5' or whatever
-    var index = key_c[note] + number;
-    data_city_notes.push(index);
+    var temp_norm = (val.temp - temp_min) / (temp_max - temp_min);
+
+    var octave = temp_norm * (octave_max - octave_min) + octave_min;
+    octave = Math.floor(octave);
+
+    var index = temp_norm * (note_max - note_min) + note_min;
+    index = Math.floor(index % 8);
+
+    var note = keys['C'][index] + octave;
+    data_city_notes.push(note);
   }
 }
 
@@ -130,16 +143,17 @@ $.getJSON( "data/today.json", function( data ) {
 	$.each( data[0].forecast, function( key, val ) {
     generateNotes(key, val, LA_notes);
 	});
+  console.log(LA_notes);
 
   $.each( data[1].forecast, function( key, val ) {
     generateNotes(key, val, NOLA_notes);
   });
-  //console.log(NOLA_notes);
+  console.log(NOLA_notes);
 
   $.each( data[2].forecast, function( key, val ) {
     generateNotes(key, val, NYC_notes);
   });
-  //console.log(NYC_notes);
+  console.log(NYC_notes);
 
 });
 
