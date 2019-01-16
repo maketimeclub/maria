@@ -176,7 +176,7 @@ var NOLA = {
   'playing': false,
   'notes': [],
   'bpm': 85,
-  'voice': "UK English Female",
+  'voice': "French Female",
   'words': [],
 };
 
@@ -184,7 +184,7 @@ var NYC = {
   'playing': false,
   'notes': [],
   'bpm': 120,
-  'voice': "US English Male",
+  'voice': "Japanese Male",
   'words': [],
 };
 
