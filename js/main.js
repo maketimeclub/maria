@@ -182,5 +182,5 @@ var NOLA_playing = false;
 var NYC_playing = false;
 
 playSong('#LA_play', LA_notes, 100, LA_playing, LA_words,"UK English Male");
-playSong('#NOLA_play', NOLA_notes, 85, NOLA_playing, NOLA_words,"UK English Female");
-playSong('#NYC_play', NYC_notes, 120, NYC_playing, NYC_words,"US English Male");
+playSong('#NOLA_play', NOLA_notes, 85, NOLA_playing, NOLA_words,"French Female");
+playSong('#NYC_play', NYC_notes, 120, NYC_playing, NYC_words,"Japanese Male");
