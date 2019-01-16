@@ -1,6 +1,14 @@
 //create a synth and connect it to the master output (your speakers)
 var synth = new Tone.Synth().toMaster();
 
+var piano = new Tone.PolySynth(4, Tone.Synth, {
+  "volume" : -8,
+  "oscillator" : {
+    "partials" : [1, 2, 1],
+  },
+  "portamento" : .05
+}).toMaster();
+
 var key_c = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C4"];
 
 // /*
@@ -119,7 +127,22 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     var bassPart = new Tone.Sequence(function(time, note){
       bass.triggerAttackRelease(note, "16n", time);
     }, city_notes).start(0);
-
+    
+    
+    var cChord = [city_notes[0]];
+    var dChord = [city_notes[1]];
+    var gChord = [city_notes[2]];
+  
+    var pianoPart = new Tone.Part(function(time, chord) {
+      piano.triggerAttackRelease(chord, "16n", time);
+    }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
+  
+    pianoPart.loop = true;
+    pianoPart.loopEnd = "1m";
+    pianoPart.humanize = true;
+    pianoPart.start(0);
+    
+    
     Tone.Transport.bpm.value = city_bpm;
     if (city_playing) {
       Tone.Transport.stop();
