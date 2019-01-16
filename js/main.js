@@ -146,24 +146,25 @@ $.getJSON( "data/today.json", function( data ) {
 var pianoPart;
 
 var playSong = function(city_button, city_notes, city_bpm, city_playing) {
-  
+
   $(city_button).on("click", function() {
-    
+    var element = $(this);
+
     if(pianoPart) {
       pianoPart.removeAll();
       pianoPart.dispose();
     }
-    
+
     var bassPart = new Tone.Sequence(function(time, note){
       bass.triggerAttackRelease(note, "16n", time);
     }, city_notes);
     bassPart.start(0);
-    
+
     //
     var cChord = [city_notes[0]];
     var dChord = [city_notes[1]];
     var gChord = [city_notes[2]];
-    
+
     pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "16n", time);
     }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
@@ -173,21 +174,24 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     pianoPart.humanize = true;
     pianoPart.start(0);
     //
-    
+
     //
     var snarePart = new Tone.Loop(function(time){
       snare.triggerAttack(time);
     }, "2n");
     snarePart.start(0);
     //
-    
+
     //
     var kickPart = new Tone.Loop(function(time){
+      console.log(element);
       kick.triggerAttackRelease("C2", "8n", time);
+      element.closest('.city').find('.kick').addClass("active");
+      setTimeout(function(){ element.closest('.city').find('.kick').removeClass("active"); }, 150);
     }, "2n");
     kickPart.start(0);
     //
-    
+
     Tone.Transport.bpm.value = city_bpm;
     if (city_playing) {
       Tone.Transport.stop();
