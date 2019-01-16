@@ -144,11 +144,16 @@ $.getJSON( "data/today.json", function( data ) {
 });
 
 var pianoPart;
+var kickPart;
 
 var playSong = function(city_button, city_notes, city_bpm, city_playing) {
 
   $(city_button).on("click", function() {
     var element = $(this);
+
+    if(kickPart) {
+      kickPart.stop();
+    }
 
     if(pianoPart) {
       pianoPart.removeAll();
@@ -183,7 +188,7 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     //
 
     //
-    var kickPart = new Tone.Loop(function(time){
+    kickPart = new Tone.Loop(function(time){
       console.log(element);
       kick.triggerAttackRelease("C2", "8n", time);
       element.closest('.city').find('.kick').addClass("active");
