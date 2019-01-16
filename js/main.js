@@ -132,7 +132,7 @@ $.getJSON( "data/today.json", function( data ) {
 		}
 	});
 	//console.log(LA_notes);
-	
+
   $.each( data[1].forecast, function( key, val ) {
     if(key < 8) {
       var index = Math.round((val.temp % 21) / 3);
@@ -150,13 +150,13 @@ $.getJSON( "data/today.json", function( data ) {
     }
   });
   //console.log(NYC_notes);
-	
+
 });
 
 var playing = false;
 
 $('#LA_play').on("click", function() {
-	
+
   var bassPart = new Tone.Sequence(function(time, note){
     bass.triggerAttackRelease(note, "16n", time);
   }, LA_notes).start(0);
@@ -165,17 +165,19 @@ $('#LA_play').on("click", function() {
   Tone.Transport.bpm.value = 100;
   if (playing) {
     Tone.Transport.stop();
+    $(this).text("Play");
     playing = false;
   } else {
     Tone.Transport.start("+0.1");
     synth.triggerAttackRelease();
     playing = true;
+    $(this).text("Stop");
   }
 
 });
 
 $('#NOLA_play').on("click", function() {
-  
+
   var bassPart = new Tone.Sequence(function(time, note){
     bass.triggerAttackRelease(note, "16n", time);
   }, NOLA_notes).start(0);
@@ -185,10 +187,12 @@ $('#NOLA_play').on("click", function() {
   if (playing) {
     Tone.Transport.stop();
     playing = false;
+    $(this).text("Play");
   } else {
     Tone.Transport.start("+0.1");
     synth.triggerAttackRelease();
     playing = true;
+    $(this).text("Stop");
   }
 
 });
@@ -204,12 +208,12 @@ $('#NYC_play').on("click", function() {
   if (playing) {
     Tone.Transport.stop();
     playing = false;
+    $(this).text("Play");
   } else {
     Tone.Transport.start("+0.1");
     synth.triggerAttackRelease();
     playing = true;
+    $(this).text("Stop");
   }
 
 });
-
-
