@@ -1,6 +1,29 @@
 //create a synth and connect it to the master output (your speakers)
 var synth = new Tone.Synth().toMaster();
 
+var snare = new Tone.NoiseSynth({
+  "volume" : -5,
+  "envelope" : {
+    "attack" : 0.001,
+    "decay" : 0.2,
+    "sustain" : 0
+  },
+  "filterEnvelope" : {
+    "attack" : 0.001,
+    "decay" : 0.1,
+    "sustain" : 0
+  }
+}).toMaster();
+
+var kick = new Tone.MembraneSynth({
+  "envelope" : {
+    "sustain" : 0,
+    "attack" : 0.02,
+    "decay" : 0.8
+  },
+  "octaves" : 10
+}).toMaster();
+
 var piano = new Tone.PolySynth(4, Tone.Synth, {
   "volume" : -8,
   "oscillator" : {
@@ -9,7 +32,7 @@ var piano = new Tone.PolySynth(4, Tone.Synth, {
   "portamento" : .05
 }).toMaster();
 
-var key_c = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C4"];
+var key_c = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
 
 // /*
 //  KICK
@@ -121,19 +144,28 @@ $.getJSON( "data/today.json", function( data ) {
 
 });
 
-var playSong = function(city_button, city_notes, city_bpm, city_playing) {
+var pianoPart;
 
+var playSong = function(city_button, city_notes, city_bpm, city_playing) {
+  
   $(city_button).on("click", function() {
+    
+    if(pianoPart) {
+      pianoPart.removeAll();
+      pianoPart.dispose();
+    }
+    
     var bassPart = new Tone.Sequence(function(time, note){
       bass.triggerAttackRelease(note, "16n", time);
-    }, city_notes).start(0);
+    }, city_notes);
+    bassPart.start(0);
     
-    
+    //
     var cChord = [city_notes[0]];
     var dChord = [city_notes[1]];
     var gChord = [city_notes[2]];
-  
-    var pianoPart = new Tone.Part(function(time, chord) {
+    
+    pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "16n", time);
     }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
   
@@ -141,7 +173,21 @@ var playSong = function(city_button, city_notes, city_bpm, city_playing) {
     pianoPart.loopEnd = "1m";
     pianoPart.humanize = true;
     pianoPart.start(0);
+    //
     
+    //
+    var snarePart = new Tone.Loop(function(time){
+      snare.triggerAttack(time);
+    }, "2n");
+    snarePart.start(0);
+    //
+    
+    //
+    var kickPart = new Tone.Loop(function(time){
+      kick.triggerAttackRelease("C2", "8n", time);
+    }, "2n");
+    kickPart.start(0);
+    //
     
     Tone.Transport.bpm.value = city_bpm;
     if (city_playing) {
