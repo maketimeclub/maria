@@ -90,8 +90,21 @@ var playSong = function(city_button, city_obj) {
     var dChord = [notes[1]];
     var gChord = [notes[2]];
 
+    var pianoIndex = 1;
+    var pianoTemp = pianoIndex;
+
     pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "16n", time);
+      element.closest('.city').find('.ball:nth-child(' + pianoIndex + ')').addClass("active");
+      pianoTemp = pianoIndex;
+      setTimeout(function(){
+        element.closest('.city').find('.ball:nth-child(' + pianoTemp + ')').removeClass("active");
+      }, 150);
+      if ( pianoIndex < 8 ) {
+        pianoIndex++;
+      } else {
+        pianoIndex = 1;
+      }
     }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
 
     pianoPart.loop = true;
@@ -108,13 +121,13 @@ var playSong = function(city_button, city_obj) {
     //
     kickPart = new Tone.Loop(function(time){
       kick.triggerAttackRelease("C2", "8n", time);
-      
+
       // visualize the kick
       element.closest('.city').find('.kick').addClass("active");
       setTimeout(function(){ element.closest('.city').find('.kick').removeClass("active"); }, 150);
     }, "2n");
     kickPart.start(0);
-    
+
     //
     Tone.Transport.bpm.value = city_obj['bpm'];
     if (city_obj['playing']) {
@@ -142,7 +155,7 @@ var note_min = 0;
 var note_max = 100;
 
 var generateNotes = function(forecast_data, city_obj) {
-  
+
   $.each( forecast_data, function( idx, val ) {
     if(idx < 8) {
       var temp_norm = (val.temp - temp_min) / (temp_max - temp_min);
@@ -158,6 +171,14 @@ var generateNotes = function(forecast_data, city_obj) {
 
       //data_city_notes.push(index);
       city_obj['words'].push(val.description);
+      city_obj['temps'].push(Math.floor(val.temp));
+    }
+  });
+
+  $( document ).ready(function() {
+    for (var i = 0; i < city_obj['temps'].length; i++) {
+      var value = 100 - city_obj['temps'][i]
+      $('#' + city_obj['id']).find('.city__balls').append('<div class="city__ball ball"><div style="top:' + value + '%;">' + city_obj['temps'][i] + '°</div></div>')
     }
   });
 
@@ -165,25 +186,31 @@ var generateNotes = function(forecast_data, city_obj) {
 }
 
 var LA = {
+  'id': 'city_la',
   'playing': false,
   'notes': [],
+  'temps': [],
   'bpm': 100,
   'voice': "UK English Male",
   'words': [],
 };
 
 var NOLA = {
+  'id': 'city_nola',
   'playing': false,
   'notes': [],
-  'bpm': 85,
+  'temps': [],
+  'bpm': 100,
   'voice': "French Female",
   'words': [],
 };
 
 var NYC = {
+  'id': 'city_nyc',
   'playing': false,
   'notes': [],
-  'bpm': 120,
+  'temps': [],
+  'bpm': 100,
   'voice': "Japanese Male",
   'words': [],
 };

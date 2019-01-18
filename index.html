@@ -77,6 +77,35 @@
           width: 100%;
         }
 
+        .city__balls {
+          height: 100%;
+        }
+
+        .ball div {
+          height: 20px;
+          width: 20px;
+          border-radius: 100%;
+          background-color: rgba(255,255,255,.15);
+          transition: background .15s ease, transform .15s ease;
+          font-size: 10px;
+          padding: 3px 0 0 2px;
+          box-sizing: border-box;
+          color: rgba(255,255,255,.8);
+          margin-top: -10px;
+          position: relative;
+        }
+
+        .ball {
+          height: 100%;
+          width: 12.5%;
+          float: left;
+          text-align: center;
+        }
+
+        .ball.active div {
+          background-color: rgba(255,255,255,.66);
+        }
+
     </style>
 
   </head>
@@ -84,33 +113,36 @@
   <body>
 
     <div id="cities">
-        <div class="city city--la" id="city_la">
-          <h2 class="city__title title">LA</h2>
-          <div class="city__circle circle">
-            <div class="city__circle-kick kick"></div>
-          </div>
-          <div class="city__buttons">
-            <button id="LA_play">Play</button>
-          </div>
+      <div class="city city--la" id="city_la">
+        <h2 class="city__title title">LA</h2>
+        <div class="city__circle circle">
+          <div class="city__circle-kick kick"></div>
+          <div class="city__balls"></div>
         </div>
-        <div class="city city--nola" id="city_nola">
-          <h2 class="city__title title">NOLA</h2>
-          <div class="city__circle circle">
-            <div class="city__circle-kick kick"></div>
-          </div>
-          <div class="city__buttons">
-            <button id="NOLA_play">Play</button>
-          </div>
+        <div class="city__buttons">
+          <button id="LA_play">Play</button>
         </div>
-        <div class="city city--nyc" id="city_nyc">
-          <h2 class="city__title title">NYC</h2>
-          <div class="city__circle circle">
-            <div class="city__circle-kick kick"></div>
-          </div>
-          <div class="city__buttons">
-            <button id="NYC_play">Play</button>
-          </div>
+      </div>
+      <div class="city city--nola" id="city_nola">
+        <h2 class="city__title title">NOLA</h2>
+        <div class="city__circle circle">
+          <div class="city__circle-kick kick"></div>
+          <div class="city__balls"></div>
         </div>
+        <div class="city__buttons">
+          <button id="NOLA_play">Play</button>
+        </div>
+      </div>
+      <div class="city city--nyc" id="city_nyc">
+        <h2 class="city__title title">NYC</h2>
+        <div class="city__circle circle">
+          <div class="city__circle-kick kick"></div>
+          <div class="city__balls"></div>
+        </div>
+        <div class="city__buttons">
+          <button id="NYC_play">Play</button>
+        </div>
+      </div>
     </div>
 
     <script src="js/jquery-3.3.1.min.js"></script>
