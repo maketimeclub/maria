@@ -80,8 +80,33 @@ var playSong = function(city_button, city_obj) {
       pianoPart.dispose();
     }
 
+    // @todo, I cant figure out how to not play the other cities ... the stuff
+    // below isn't working. I think cause the bass is a tone.js "sequence" and not a "part"
+    if(bassPart) {
+      bassPart.stop();
+      bassPart.removeAll();
+      bassPart.dispose();
+    }
+
+    var bassIndex = 1;
+    var bassTemp = bassIndex;
+    var bassNumber;
+
     var bassPart = new Tone.Sequence(function(time, note){
       bass.triggerAttackRelease(note, "16n", time);
+      // visualize the bass by highlighting one of the temperature slats
+      bassNumber = element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ')').attr("data-temp");
+      element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ') .slat').css("height", bassNumber);
+      bassTemp = bassIndex;
+      // unhighlight temperature slats after 1.5 seconds
+      setTimeout(function(){
+        element.closest('.city').find('.city__slat:nth-child(' + bassTemp + ') .slat').css("height", "10px");
+      }, 150);
+      if ( bassIndex < 8 ) {
+        bassIndex++;
+      } else {
+        bassIndex = 1;
+      }
     }, notes);
     bassPart.start(0);
 
@@ -95,8 +120,10 @@ var playSong = function(city_button, city_obj) {
 
     pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "16n", time);
+      // visualize the piano by highlighting one of the temperature balls
       element.closest('.city').find('.ball:nth-child(' + pianoIndex + ')').addClass("active");
       pianoTemp = pianoIndex;
+      // unhighlight temperature balls after 1.5 seconds
       setTimeout(function(){
         element.closest('.city').find('.ball:nth-child(' + pianoTemp + ')').removeClass("active");
       }, 150);
@@ -105,7 +132,7 @@ var playSong = function(city_button, city_obj) {
       } else {
         pianoIndex = 1;
       }
-    }, [["0:0:2", cChord], ["0:1", cChord], ["0:1:3", dChord], ["0:2:2", cChord], ["0:3", cChord], ["0:3:2", gChord]]);
+    }, [["0:0:0", [notes[0]]], ["0:0:2", [notes[1]]], ["0:1:0", [notes[2]]], ["0:1:2", [notes[3]]], ["0:2:0", [notes[4]]], ["0:2:2", [notes[5]]], ["0:3:0", [notes[6]]], ["0:3:2", [notes[7]]]]);
 
     pianoPart.loop = true;
     pianoPart.loopEnd = "1m";
@@ -176,13 +203,18 @@ var generateNotes = function(forecast_data, city_obj) {
   });
 
   $( document ).ready(function() {
+
+    // create temperature balls for piano
     for (var i = 0; i < city_obj['temps'].length; i++) {
       var value = 100 - city_obj['temps'][i]
       $('#' + city_obj['id']).find('.city__balls').append('<div class="city__ball ball"><div style="top:' + value + '%;">' + city_obj['temps'][i] + '°</div></div>')
     }
+    // create temperature slats for bass
+    for (var i = 0; i < city_obj['temps'].length; i++) {
+      var value = 100 - city_obj['temps'][i]
+      $('#' + city_obj['id']).find('.city__slats').append('<div class="city__slat" data-temp="' + city_obj['temps'][i] + '"><div class="slat"></div><div class="slat-stat">' + city_obj['temps'][i] + '°</div></div>')
+    }
   });
-
-  console.log(city_obj['notes']);
 }
 
 var LA = {

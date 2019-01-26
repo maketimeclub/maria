@@ -58,6 +58,10 @@
             position: relative;
         }
 
+        .city__buttons {
+          margin-top: 12px;
+        }
+
         .kick {
           height: 50%;
           width: 50%;
@@ -106,6 +110,40 @@
           background-color: rgba(255,255,255,.66);
         }
 
+        .city__slats:after {
+          content: '';
+          clear: both;
+          display: table;
+        }
+
+        .city__slat {
+          width: 12.5%;
+          float: left;
+          text-align: center;
+          position: relative;
+        }
+
+        .slat {
+          background-color: rgba(0,0,0,.25);
+          transition: height .15s ease, transform .15s ease;
+          box-sizing: border-box;
+          position: absolute;
+          bottom: 100%;
+          left: 0;
+          height: 10px;
+          width: 100%;
+        }
+
+        .slat-stat {
+          color: rgba(255,255,255,.8);
+          font-size: 10px;
+          position: relative;
+          margin-top: 2px;
+        }
+
+        .city__slat.active .slat {
+          background-color: rgba(0,0,0,.1);
+        }
     </style>
 
   </head>
@@ -119,6 +157,7 @@
           <div class="city__circle-kick kick"></div>
           <div class="city__balls"></div>
         </div>
+        <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="LA_play">Play</button>
         </div>
@@ -129,6 +168,7 @@
           <div class="city__circle-kick kick"></div>
           <div class="city__balls"></div>
         </div>
+        <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="NOLA_play">Play</button>
         </div>
@@ -139,6 +179,7 @@
           <div class="city__circle-kick kick"></div>
           <div class="city__balls"></div>
         </div>
+        <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="NYC_play">Play</button>
         </div>
