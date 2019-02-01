@@ -65,6 +65,7 @@ var pianoPart;
 var kickPart;
 var bassPart;
 var timerForVoice;
+var timerForVoice2;
 
 var playSong = function(city_button, city_obj) {
 
@@ -118,10 +119,12 @@ var playSong = function(city_button, city_obj) {
     var gChord = [notes[2]];
 
     var pianoIndex = 1;
+    var pianoFull = 1;
     var pianoTemp = pianoIndex;
+    var pianoLoop = 1;
 
     pianoPart = new Tone.Part(function(time, chord) {
-      piano.triggerAttackRelease(chord, "16n", time);
+      piano.triggerAttackRelease(chord, "32n", time);
       // visualize the piano by highlighting one of the temperature balls
       element.closest('.city').find('.ball:nth-child(' + pianoIndex + ')').addClass("active");
       pianoTemp = pianoIndex;
@@ -129,15 +132,37 @@ var playSong = function(city_button, city_obj) {
       setTimeout(function(){
         element.closest('.city').find('.ball:nth-child(' + pianoTemp + ')').removeClass("active");
       }, 150);
-      if ( pianoIndex < 8 ) {
+      if (pianoLoop == 2 && pianoIndex == 4) {
+        pianoIndex = 0;
+        pianoLoop = 1;
+      } else if ( pianoIndex < 8 ) {
         pianoIndex++;
       } else {
         pianoIndex = 1;
+        if (pianoLoop == 1) {
+          pianoLoop = 2;
+        } else {
+          pianoLoop = 1;
+        }
       }
-    }, [["0:0:0", [notes[0]]], ["0:0:2", [notes[1]]], ["0:1:0", [notes[2]]], ["0:1:2", [notes[3]]], ["0:2:0", [notes[4]]], ["0:2:2", [notes[5]]], ["0:3:0", [notes[6]]], ["0:3:2", [notes[7]]]]);
+    }, [
+      ["0:0:0", [notes[0]]],
+      ["0:0:2", [notes[1]]],
+      ["0:1:0", [notes[2]]],
+      ["0:1:2", [notes[3]]],
+      ["0:2:0", [notes[4]]],
+      ["0:2:2", [notes[5]]],
+      ["0:3:0", [notes[6]]],
+      ["0:3:2", [notes[7]]],
+      ["0:4:0", [notes[0]]],
+      ["0:4:2", [notes[1]]],
+      ["0:5:0", [notes[2]]],
+      ["0:5:2", [notes[3]]],
+      ["0:6:0", [notes[4]]]
+    ]);
 
     pianoPart.loop = true;
-    pianoPart.loopEnd = "1m";
+    pianoPart.loopEnd = "2m";
     pianoPart.humanize = true;
     pianoPart.start(0);
 
@@ -157,6 +182,24 @@ var playSong = function(city_button, city_obj) {
     }, "2n");
     kickPart.start(0);
 
+    // voice part
+    var sing = function() {
+      var i = 0;
+      var speed = city_obj['bpm'] * 48;
+
+      var singIt = function() {
+        var word = city_obj['words'][i];
+        var msg = new SpeechSynthesisUtterance(word);
+        window.speechSynthesis.speak(msg);
+        // responsiveVoice.speak(city_obj['words'][i], city_obj['voice']);
+        i++;
+        if (i > 7)
+        i = 0;
+      }
+      singIt();
+      timerForVoice = setInterval(singIt, speed);
+    };
+
     //
     Tone.Transport.bpm.value = city_obj['bpm'];
     if (city_obj['playing']) {
@@ -165,12 +208,12 @@ var playSong = function(city_button, city_obj) {
       city_obj['playing'] = false;
       if(timerForVoice)
         clearTimeout(timerForVoice);
+      if(timerForVoice2)
+        clearTimeout(timerForVoice2);
     } else {
       Tone.Transport.start("+0.1");
       synth.triggerAttackRelease();
-      timerForVoice = setTimeout(function(){
-        responsiveVoice.speak(city_obj['words'][1], city_obj['voice']);
-      }, 1600);
+      timerForVoice2 = setTimeout(function(){ sing(); }, 4000);
       city_obj['playing'] = true;
       $(this).text("Stop");
     }
