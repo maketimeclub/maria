@@ -63,6 +63,8 @@ var keys = {
 
 var pianoPart;
 var kickPart;
+var bassPart;
+var timerForVoice;
 
 var playSong = function(city_button, city_obj) {
 
@@ -92,7 +94,7 @@ var playSong = function(city_button, city_obj) {
     var bassTemp = bassIndex;
     var bassNumber;
 
-    var bassPart = new Tone.Sequence(function(time, note){
+    bassPart = new Tone.Sequence(function(time, note){
       bass.triggerAttackRelease(note, "16n", time);
       // visualize the bass by highlighting one of the temperature slats
       bassNumber = element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ')').attr("data-temp");
@@ -161,10 +163,12 @@ var playSong = function(city_button, city_obj) {
       Tone.Transport.stop();
       $(this).text("Play");
       city_obj['playing'] = false;
+      if(timerForVoice)
+        clearTimeout(timerForVoice);
     } else {
       Tone.Transport.start("+0.1");
       synth.triggerAttackRelease();
-      setTimeout(function(){
+      timerForVoice = setTimeout(function(){
         responsiveVoice.speak(city_obj['words'][1], city_obj['voice']);
       }, 1600);
       city_obj['playing'] = true;
