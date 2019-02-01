@@ -1,4 +1,10 @@
+# This script uses OpenWeatherMap's API to retrieve tomorrow's forcast data as JSON.
+# It then reformats the data and saves it as a JSON file.
+#
+# example API call: 
 # https://api.openweathermap.org/data/2.5/forecast?zip=90210,us&appid=<appid>
+# (NOTE: you must provide an appid token for the URL)
+#
 
 
 import requests
@@ -7,7 +13,7 @@ from secrets import *
 
 
 class WeatherForecast:
-    url = 'https://api.openweathermap.org/data/2.5/forecast'
+    url = 'http://api.openweathermap.org/data/2.5/forecast'
 
     def __init__(self):
         pass
