@@ -70,6 +70,9 @@ var timerForVoice2;
 var playSong = function(city_button, city_obj) {
 
   let notes = city_obj['notes'];
+  let notesH = city_obj['notesH'];
+  console.log(notes);
+  console.log(notesH);
 
   $(city_button).on("click", function() {
     var element = $(this);
@@ -99,18 +102,19 @@ var playSong = function(city_button, city_obj) {
       bass.triggerAttackRelease(note, "16n", time);
       // visualize the bass by highlighting one of the temperature slats
       bassNumber = element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ')').attr("data-temp");
-      element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ') .slat').css("height", bassNumber);
+      bassNumberHalf = bassNumber * .5;
+      element.closest('.city').find('.city__slat:nth-child(' + bassIndex + ') .slat').css("height", bassNumberHalf + '%');
       bassTemp = bassIndex;
       // unhighlight temperature slats after 1.5 seconds
       setTimeout(function(){
-        element.closest('.city').find('.city__slat:nth-child(' + bassTemp + ') .slat').css("height", "10px");
+        element.closest('.city').find('.city__slat:nth-child(' + bassTemp + ') .slat').css("height", "20px");
       }, 150);
       if ( bassIndex < 8 ) {
         bassIndex++;
       } else {
         bassIndex = 1;
       }
-    }, notes);
+    }, notesH);
     bassPart.start(0);
 
     //
@@ -120,29 +124,29 @@ var playSong = function(city_button, city_obj) {
 
     var pianoIndex = 1;
     var pianoFull = 1;
-    var pianoTemp = pianoIndex;
-    var pianoLoop = 1;
+    var pianoLastIndex = pianoIndex;
+    var pianoLoop = "first";
 
     pianoPart = new Tone.Part(function(time, chord) {
       piano.triggerAttackRelease(chord, "32n", time);
       // visualize the piano by highlighting one of the temperature balls
       element.closest('.city').find('.ball:nth-child(' + pianoIndex + ')').addClass("active");
-      pianoTemp = pianoIndex;
+      pianoLastIndex = pianoIndex;
       // unhighlight temperature balls after 1.5 seconds
       setTimeout(function(){
-        element.closest('.city').find('.ball:nth-child(' + pianoTemp + ')').removeClass("active");
+        element.closest('.city').find('.ball:nth-child(' + pianoLastIndex + ')').removeClass("active");
       }, 150);
-      if (pianoLoop == 2 && pianoIndex == 4) {
-        pianoIndex = 0;
-        pianoLoop = 1;
+      if (pianoLoop == "second" && pianoIndex == 5) {
+        pianoIndex = 1;
+        pianoLoop = "first";
       } else if ( pianoIndex < 8 ) {
         pianoIndex++;
       } else {
         pianoIndex = 1;
-        if (pianoLoop == 1) {
-          pianoLoop = 2;
+        if (pianoLoop == "first") {
+          pianoLoop = "second";
         } else {
-          pianoLoop = 1;
+          pianoLoop = "first";
         }
       }
     }, [
@@ -223,8 +227,12 @@ var playSong = function(city_button, city_obj) {
 
 var temp_min = 0;
 var temp_max = 100;
+var humidity_min = 50;
+var humidity_max = 100;
 var octave_min = 2;
 var octave_max = 7;
+var octaveH_min = 3;
+var octaveH_max = 4;
 var note_min = 0;
 var note_max = 100;
 
@@ -232,6 +240,8 @@ var generateNotes = function(forecast_data, city_obj) {
 
   $.each( forecast_data, function( idx, val ) {
     if(idx < 8) {
+
+      // temperature notes
       var temp_norm = (val.temp - temp_min) / (temp_max - temp_min);
 
       var octave = temp_norm * (octave_max - octave_min) + octave_min;
@@ -243,9 +253,22 @@ var generateNotes = function(forecast_data, city_obj) {
       var note = keys['C'][index] + octave;
       city_obj['notes'].push(note);
 
+      // humidity notes
+      var humidity_norm = (val.humidity - humidity_min) / (humidity_max - humidity_min);
+
+      var octaveH = humidity_norm * (octaveH_max - octaveH_min) + octaveH_min;
+      octaveH = Math.floor(octaveH);
+
+      var indexH = humidity_norm * (note_max - note_min) + note_min;
+      indexH = Math.floor(indexH % 8);
+
+      var noteH = keys['C'][indexH] + octaveH;
+      city_obj['notesH'].push(noteH);
+
       //data_city_notes.push(index);
       city_obj['words'].push(val.description);
       city_obj['temps'].push(Math.floor(val.temp));
+      city_obj['humidities'].push(Math.floor(val.humidity));
     }
   });
 
@@ -259,16 +282,36 @@ var generateNotes = function(forecast_data, city_obj) {
     // create temperature slats for bass
     for (var i = 0; i < city_obj['temps'].length; i++) {
       var value = 100 - city_obj['temps'][i]
-      $('#' + city_obj['id']).find('.city__slats').append('<div class="city__slat" data-temp="' + city_obj['temps'][i] + '"><div class="slat"></div><div class="slat-stat">' + city_obj['temps'][i] + '°</div></div>')
+      $('#' + city_obj['id']).find('.city__slats').append('<div class="city__slat" data-temp="' + city_obj['humidities'][i] + '"><div class="slat"></div><div class="slat-stat">' + city_obj['humidities'][i] + '</div></div>')
     }
   });
 }
+
+var TODAY = 'January 1, 2019';
+var TIMES = [];
+var tempTimesBig = [];
+
+var findDate = function(forecast_data) {
+
+  $.each(forecast_data, function( idx, val ) {
+    if(idx < 8) {
+      var str = val.time_str;
+      var tempTimes = str.split(/(\s+)/);
+      tempTimesBig.push(tempTimes[2]);
+
+      //blah I'm giving up for now. @todo
+    }
+  });
+}
+
 
 var LA = {
   'id': 'city_la',
   'playing': false,
   'notes': [],
+  'notesH': [],
   'temps': [],
+  'humidities': [],
   'bpm': 100,
   'voice': "UK English Male",
   'words': [],
@@ -278,7 +321,9 @@ var NOLA = {
   'id': 'city_nola',
   'playing': false,
   'notes': [],
+  'notesH': [],
   'temps': [],
+  'humidities': [],
   'bpm': 100,
   'voice': "French Female",
   'words': [],
@@ -288,7 +333,9 @@ var NYC = {
   'id': 'city_nyc',
   'playing': false,
   'notes': [],
+  'notesH': [],
   'temps': [],
+  'humidities': [],
   'bpm': 100,
   'voice': "Japanese Male",
   'words': [],
@@ -299,9 +346,32 @@ $.getJSON( "data/today.json", function( data ) {
   generateNotes(data[0].forecast, LA);
   generateNotes(data[1].forecast, NOLA);
   generateNotes(data[2].forecast, NYC);
-
+  findDate(data[0].forecast);
 });
 
 playSong('#LA_play', LA);
 playSong('#NOLA_play', NOLA);
 playSong('#NYC_play', NYC);
+
+//javascript, jQuery
+var giphy_la = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+los+angeles" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+giphy_la.done(function(data) {
+  var random_la = Math.floor(Math.random() * 5);
+  $('#city_la').css("background-image", "url('" + data.data[random_la].images.original.url + "')")
+});
+
+var giphy_nola = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+orleans" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+giphy_nola.done(function(data) {
+  var random_nola = Math.floor(Math.random() * 5);
+  $('#city_nola').css("background-image", "url('" + data.data[random_nola].images.original.url + "')")
+});
+
+var giphy_nyc = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+york" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+giphy_nyc.done(function(data) {
+  var random_nyc = Math.floor(Math.random() * 5);
+  $('#city_nyc').css("background-image", "url('" + data.data[random_nyc].images.original.url + "')")
+});
+
+var getDate = function() {
+
+}

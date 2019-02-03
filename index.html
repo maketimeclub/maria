@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Maria</title>
     <meta name="description" content="Maria">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Mono" rel="stylesheet">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
 
@@ -14,89 +15,190 @@
             margin: 0px;
             padding: 0px;
             font-family: sans-serif;
-            overflow: hidden;
-            height: 100%;
         }
 
         #cities {
+          overflow: hidden;
             width: 100%;
-            content: "";
-            display: table;
-            clear: both;
+            height: 100vh;
+            position: relative;
+        }
+
+        .info {
+          height: 100vh;
+          width: 100%;
+          background: black;
+          text-align: center;
+          font-family: 'PT Mono', monospace;
+          text-transform: uppercase;
+          font-size: 12px;
+          letter-spacing: 2px;
+          color: white;
+          display: flex;
+        }
+
+        .info a {
+          color: #4697FF;
+          text-decoration: none;
+        }
+
+        .info a:hover {
+          text-decoration: underline;
+        }
+
+        .info__inside {
+          margin: auto;
+          max-width: 600px;
+          padding: 40px;
+        }
+
+        .info img {
+          width: 200px;
         }
 
         #cities .city {
             float: left;
-            width: 33.33%;
+            width: 33.333333%;
             height:100vh;
             text-align: center;
-            padding: 50px 0px;
             color: white;
+            position: relative;
+            background-size: cover;
+            background-position: center center;
+            background-blend-mode: multiply;
+            overflow: hidden;
         }
 
-        #cities .city .title {
-            font-size: 26px;
-            margin-top: 40%;
+        #cities .city:after {
+          content: '';
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: .8;
+          background-color: inherit;
         }
 
-        #city_la {
-            background-color: #552583;
+        .city__title {
+            text-align: left;
+            position: relative;
+            z-index: 100;
+            margin: 0;
+            box-sizing: content-box;
+            padding: 20px 20px 0 20px;
         }
-        #city_nola {
-            background-color: #D3BC8D;
+
+        .city__title-name {
+          font-family: 'Abril Fatface', cursive;
+          font-size: 42px;
+          font-weight: 300;
         }
-        #city_nyc {
-            background-color: #6CACE4;
+
+        .city__date,
+        .city__time {
+          font-family: 'PT Mono', monospace;
+          text-transform: uppercase;
+          font-size: 12px;
+          letter-spacing: 2px;
         }
+
+        .city__date {
+          position: relative;
+          top: 2px;
+        }
+
+        #city_la { background-color: #552583; }
+        #city_la:after { background-image: linear-gradient(-180deg, #EC08FD 0%, #FFB42E 100%); }
+        #city_nola { background-color: #D3BC8D; }
+        #city_nola:after { background-image: linear-gradient(-180deg, #FFC035 0%, #AEFF62 100%);}
+        #city_nyc { background-color: #6CACE4; }
+        #city_nyc:after { background-image: linear-gradient(-180deg, #35DFFF 0%, #5930A7 100%);}
+
         .circle {
             display: block;
-            width: 200px;
-            height: 200px;
+            width: 200%;
+            height: 200%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
             margin: 20px auto;
-            background-color: rgba(0,0,0,.25);
-            border-radius: 100%;
-            position: relative;
+            /*background-color: rgba(0,0,0,.25); */
+            z-index: 2;
         }
 
         .city__buttons {
           margin-top: 12px;
+          z-index: 2;
+          position: relative;
+          text-align: left;
+          padding: 0 0 0 20px;
+        }
+
+        button {
+          font-weight: 800;
+          font-family: 'PT Mono', monospace;
+          text-transform: uppercase;
+          font-size: 12px;
+          letter-spacing: 2px;
+          background: white;
+          border: none;
+          border-radius: 3px;
+          padding: 4px 12px;
+        }
+
+        button:hover {
+          background: black;
+          color: white;
+          cursor: pointer;
+        }
+
+        button:active,
+        button:focus {
+          outline: none;
         }
 
         .kick {
-          height: 50%;
-          width: 50%;
-          border-radius: 100%;
           background-color: rgba(0,0,0,.25);
           position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%,-50%);
-          transition: opacity .15s ease, height .15s ease, width .15s ease;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          transition: opacity .15s ease;
           opacity: 0;
         }
 
         .kick.active {
           opacity: 1;
-          height: 100%;
-          width: 100%;
         }
 
         .city__balls {
+          position: relative;
+          z-index: 2;
+          position: absolute;
+          top: 50%;
+          left: 0;
+          width: 100%;
           height: 100%;
+          transform: translatey(-50%);
+          text-align: center;
         }
 
         .ball div {
-          height: 20px;
-          width: 20px;
+          height: 23px;
+          width: 23px;
           border-radius: 100%;
           background-color: rgba(255,255,255,.15);
           transition: background .15s ease, transform .15s ease;
           font-size: 10px;
-          padding: 3px 0 0 2px;
+          padding: 5px 0 0 2px;
           box-sizing: border-box;
           color: rgba(255,255,255,.8);
-          margin-top: -10px;
           position: relative;
+          margin: 0 auto;
+          transform: translatey(-50%);
         }
 
         .ball {
@@ -110,6 +212,15 @@
           background-color: rgba(255,255,255,.66);
         }
 
+        .city__slats {
+          z-index: 2;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
         .city__slats:after {
           content: '';
           clear: both;
@@ -121,6 +232,7 @@
           float: left;
           text-align: center;
           position: relative;
+          height: 100%;
         }
 
         .slat {
@@ -128,17 +240,20 @@
           transition: height .15s ease, transform .15s ease;
           box-sizing: border-box;
           position: absolute;
-          bottom: 100%;
+          bottom: 0%;
           left: 0;
-          height: 10px;
+          height: 20px;
           width: 100%;
         }
 
         .slat-stat {
           color: rgba(255,255,255,.8);
           font-size: 10px;
-          position: relative;
-          margin-top: 2px;
+          position: absolute;
+          bottom: 4px;
+          left: 0;
+          width: 100%;
+          text-align: center;
         }
 
         .city__slat.active .slat {
@@ -152,37 +267,57 @@
 
     <div id="cities">
       <div class="city city--la" id="city_la">
-        <h2 class="city__title title">LA</h2>
+        <h2 class="city__title title">
+          <div class="city__date">January 1, 2019</div>
+          <div class="city__title-name">Los Angeles</div>
+          <div class="city__time">6:00am</div>
+        </h2>
         <div class="city__circle circle">
           <div class="city__circle-kick kick"></div>
-          <div class="city__balls"></div>
         </div>
+        <div class="city__balls"></div>
         <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="LA_play">Play</button>
         </div>
       </div>
       <div class="city city--nola" id="city_nola">
-        <h2 class="city__title title">NOLA</h2>
+        <h2 class="city__title title">
+          <div class="city__date">January 1, 2019</div>
+          <div class="city__title-name">New Orleans</div>
+          <div class="city__time">6:00am</div>
+        </h2>
         <div class="city__circle circle">
           <div class="city__circle-kick kick"></div>
-          <div class="city__balls"></div>
         </div>
+        <div class="city__balls"></div>
         <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="NOLA_play">Play</button>
         </div>
       </div>
       <div class="city city--nyc" id="city_nyc">
-        <h2 class="city__title title">NYC</h2>
+        <h2 class="city__title title">
+          <div class="city__date">January 1, 2019</div>
+          <div class="city__title-name">New York</div>
+          <div class="city__time">6:00am</div>
+        </h2>
         <div class="city__circle circle">
           <div class="city__circle-kick kick"></div>
-          <div class="city__balls"></div>
         </div>
+        <div class="city__balls"></div>
         <div class="city__slats"></div>
         <div class="city__buttons">
           <button id="NYC_play">Play</button>
         </div>
+      </div>
+    </div>
+
+    <div class="info">
+      <div class="info__inside">
+        <p>The "music" above gets generated every day from publically available weather data.</p>
+        <p>This is a <a href="http://maketime.club" target="blank">MakeTimeClub</a> project.</p>
+        <img src="PoweredBy_640_Horizontal_Light-Backgrounds_With_Logo.gif" alt="Powered By GIPHY" />
       </div>
     </div>
 
