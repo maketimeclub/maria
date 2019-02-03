@@ -110,7 +110,7 @@ var playSong = function(city_button, city_obj) {
       stopSong(city_button, city_obj);
       return;
     } else if (currentSongButton) {
-      $(currentSong).click();
+      $(currentSongButton).click();
     }
     
     var bassIndex = 1;
