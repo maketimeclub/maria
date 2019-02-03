@@ -354,19 +354,19 @@ playSong('#NOLA_play', NOLA);
 playSong('#NYC_play', NYC);
 
 //javascript, jQuery
-var giphy_la = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+los+angeles" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+var giphy_la = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+los+angeles" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
 giphy_la.done(function(data) {
   var random_la = Math.floor(Math.random() * 5);
   $('#city_la').css("background-image", "url('" + data.data[random_la].images.original.url + "')")
 });
 
-var giphy_nola = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+orleans" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+var giphy_nola = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+orleans" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
 giphy_nola.done(function(data) {
   var random_nola = Math.floor(Math.random() * 5);
   $('#city_nola').css("background-image", "url('" + data.data[random_nola].images.original.url + "')")
 });
 
-var giphy_nyc = $.get("http://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+york" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+var giphy_nyc = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+york" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
 giphy_nyc.done(function(data) {
   var random_nyc = Math.floor(Math.random() * 5);
   $('#city_nyc').css("background-image", "url('" + data.data[random_nyc].images.original.url + "')")
