@@ -66,6 +66,34 @@ var kickPart;
 var bassPart;
 var timerForVoice;
 var timerForVoice2;
+var currentSongButton;
+
+var stopSong = function(city_button, city_obj) {
+  if(kickPart) {
+    kickPart.stop();
+  }
+
+  if(pianoPart) {
+    pianoPart.removeAll();
+    pianoPart.dispose();
+  }
+
+  if(bassPart) {
+    bassPart.stop();
+    bassPart.removeAll();
+    bassPart.dispose();
+  }
+  
+  Tone.Transport.stop();
+  $(city_button).text("Play");
+  city_obj['playing'] = false;
+  if(timerForVoice)
+    clearTimeout(timerForVoice);
+  if(timerForVoice2)
+    clearTimeout(timerForVoice2);
+  
+  currentSongButton = null;
+}
 
 var playSong = function(city_button, city_obj) {
 
@@ -75,25 +103,16 @@ var playSong = function(city_button, city_obj) {
   console.log(notesH);
 
   $(city_button).on("click", function() {
+    
     var element = $(this);
-
-    if(kickPart) {
-      kickPart.stop();
+    
+    if (city_obj['playing']) {  
+      stopSong(city_button, city_obj);
+      return;
+    } else if (currentSongButton) {
+      $(currentSong).click();
     }
-
-    if(pianoPart) {
-      pianoPart.removeAll();
-      pianoPart.dispose();
-    }
-
-    // @todo, I cant figure out how to not play the other cities ... the stuff
-    // below isn't working. I think cause the bass is a tone.js "sequence" and not a "part"
-    if(bassPart) {
-      bassPart.stop();
-      bassPart.removeAll();
-      bassPart.dispose();
-    }
-
+    
     var bassIndex = 1;
     var bassTemp = bassIndex;
     var bassNumber;
@@ -206,21 +225,15 @@ var playSong = function(city_button, city_obj) {
 
     //
     Tone.Transport.bpm.value = city_obj['bpm'];
-    if (city_obj['playing']) {
-      Tone.Transport.stop();
-      $(this).text("Play");
-      city_obj['playing'] = false;
-      if(timerForVoice)
-        clearTimeout(timerForVoice);
-      if(timerForVoice2)
-        clearTimeout(timerForVoice2);
-    } else {
-      Tone.Transport.start("+0.1");
-      synth.triggerAttackRelease();
-      timerForVoice2 = setTimeout(function(){ sing(); }, 4000);
-      city_obj['playing'] = true;
-      $(this).text("Stop");
-    }
+    
+    Tone.Transport.start("+0.1");
+    synth.triggerAttackRelease();
+    timerForVoice2 = setTimeout(function(){ sing(); }, 4000);
+    city_obj['playing'] = true;
+    $(this).text("Stop");
+
+    currentSongButton = city_button;
+
   });
 };
 
