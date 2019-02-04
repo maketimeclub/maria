@@ -59,7 +59,15 @@ var keys = {
   'B': ["B", "C#", "D#", "E",  "F#", "G#", "A#", "B"],
 }
 
-
+// grabs 5 images from giphy based on a city and seach term then randomly selects
+// one and sets it as the background image of that city.
+var generateImage = function(city_id, city_string, search_term) {
+  var giphy = $.get("https://api.giphy.com/v1/gifs/search?q=" + city_string + '+' + search_term + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
+  giphy.done(function(data) {
+    var random = Math.floor(Math.random() * 5);
+    $(city_id).css("background-image", "url('" + data.data[random].images.original.url + "')");
+  });
+};
 
 var pianoPart;
 var kickPart;
@@ -83,7 +91,7 @@ var stopSong = function(city_button, city_obj) {
     bassPart.removeAll();
     bassPart.dispose();
   }
-  
+
   Tone.Transport.stop();
   $(city_button).text("Play");
   city_obj['playing'] = false;
@@ -91,7 +99,7 @@ var stopSong = function(city_button, city_obj) {
     clearTimeout(timerForVoice);
   if(timerForVoice2)
     clearTimeout(timerForVoice2);
-  
+
   currentSongButton = null;
 }
 
@@ -99,20 +107,18 @@ var playSong = function(city_button, city_obj) {
 
   let notes = city_obj['notes'];
   let notesH = city_obj['notesH'];
-  console.log(notes);
-  console.log(notesH);
 
   $(city_button).on("click", function() {
-    
+
     var element = $(this);
-    
-    if (city_obj['playing']) {  
+
+    if (city_obj['playing']) {
       stopSong(city_button, city_obj);
       return;
     } else if (currentSongButton) {
       $(currentSongButton).click();
     }
-    
+
     var bassIndex = 1;
     var bassTemp = bassIndex;
     var bassNumber;
@@ -214,6 +220,7 @@ var playSong = function(city_button, city_obj) {
         var word = city_obj['words'][i];
         var msg = new SpeechSynthesisUtterance(word);
         window.speechSynthesis.speak(msg);
+        generateImage('#' + city_obj['id'], city_obj['giphy_term'], city_obj['giphy_words'][i]);
         // responsiveVoice.speak(city_obj['words'][i], city_obj['voice']);
         i++;
         if (i > 7)
@@ -225,7 +232,7 @@ var playSong = function(city_button, city_obj) {
 
     //
     Tone.Transport.bpm.value = city_obj['bpm'];
-    
+
     Tone.Transport.start("+0.1");
     synth.triggerAttackRelease();
     timerForVoice2 = setTimeout(function(){ sing(); }, 4000);
@@ -278,8 +285,12 @@ var generateNotes = function(forecast_data, city_obj) {
       var noteH = keys['C'][indexH] + octaveH;
       city_obj['notesH'].push(noteH);
 
+      // make all spaces into '+' for giphy searching
+      var giphy_description = val.description.split(' ').join('+');
+
       //data_city_notes.push(index);
       city_obj['words'].push(val.description);
+      city_obj['giphy_words'].push(giphy_description);
       city_obj['temps'].push(Math.floor(val.temp));
       city_obj['humidities'].push(Math.floor(val.humidity));
     }
@@ -328,6 +339,8 @@ var LA = {
   'bpm': 100,
   'voice': "UK English Male",
   'words': [],
+  'giphy_words': [],
+  'giphy_term': 'los+angeles'
 };
 
 var NOLA = {
@@ -340,6 +353,8 @@ var NOLA = {
   'bpm': 100,
   'voice': "French Female",
   'words': [],
+  'giphy_words': [],
+  'giphy_term': 'new+orleans'
 };
 
 var NYC = {
@@ -352,6 +367,8 @@ var NYC = {
   'bpm': 100,
   'voice': "Japanese Male",
   'words': [],
+  'giphy_words': [],
+  'giphy_term': 'new+york+city'
 };
 
 $.getJSON( "data/today.json", function( data ) {
@@ -366,24 +383,9 @@ playSong('#LA_play', LA);
 playSong('#NOLA_play', NOLA);
 playSong('#NYC_play', NYC);
 
-//javascript, jQuery
-var giphy_la = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+los+angeles" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
-giphy_la.done(function(data) {
-  var random_la = Math.floor(Math.random() * 5);
-  $('#city_la').css("background-image", "url('" + data.data[random_la].images.original.url + "')")
-});
-
-var giphy_nola = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+orleans" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
-giphy_nola.done(function(data) {
-  var random_nola = Math.floor(Math.random() * 5);
-  $('#city_nola').css("background-image", "url('" + data.data[random_nola].images.original.url + "')")
-});
-
-var giphy_nyc = $.get("https://api.giphy.com/v1/gifs/search?q=" + "overcast+clouds+new+york" + "&api_key=226126Jphdp54Ig8dgTuFco6AOZGGIBz&limit=5");
-giphy_nyc.done(function(data) {
-  var random_nyc = Math.floor(Math.random() * 5);
-  $('#city_nyc').css("background-image", "url('" + data.data[random_nyc].images.original.url + "')")
-});
+generateImage('#city_la', 'los+angeles', 'weather');
+generateImage('#city_nola', 'new+orleans', 'weather');
+generateImage('#city_nyc', 'new+york', 'weather');
 
 var getDate = function() {
 
