@@ -313,19 +313,20 @@ var generateNotes = function(forecast_data, city_obj) {
 
 var TODAY = 'January 1, 2019';
 var TIMES = [];
-var tempTimesBig = [];
+var tempTimesBig = '';
 
 var findDate = function(forecast_data) {
 
   $.each(forecast_data, function( idx, val ) {
-    if(idx < 8) {
+    if(idx < 1) {
       var str = val.time_str;
       var tempTimes = str.split(/(\s+)/);
-      tempTimesBig.push(tempTimes[2]);
-
-      //blah I'm giving up for now. @todo
+      TODAY = tempTimes[0];
+      // this all could be way better, but whatever
     }
   });
+
+  $('.city__date').html(TODAY);
 }
 
 
