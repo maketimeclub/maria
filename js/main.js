@@ -71,6 +71,7 @@ var generateImage = function(city_id, city_string, search_term) {
 
 var pianoPart;
 var kickPart;
+var snarePart;
 var bassPart;
 var timerForVoice;
 var timerForVoice2;
@@ -79,6 +80,10 @@ var currentSongButton;
 var stopSong = function(city_button, city_obj) {
   if(kickPart) {
     kickPart.stop();
+  }
+
+  if(snarePart) {
+    snarePart.stop();
   }
 
   if(pianoPart) {
@@ -195,11 +200,10 @@ var playSong = function(city_button, city_obj) {
     pianoPart.humanize = true;
     pianoPart.start(0);
 
-    //
     var snarePart = new Tone.Loop(function(time){
+      console.log("test");
       snare.triggerAttack(time);
-    }, "2n");
-    snarePart.start(0);
+    }, "2n").start("4n");
 
     //
     kickPart = new Tone.Loop(function(time){
